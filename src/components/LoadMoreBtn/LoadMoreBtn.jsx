@@ -1,12 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const LoadMoreBtn = () => {
   return (
-      <div>
-        <button type="button">Load more</button>
-      </div>
-
+    <div>
+      <button type="button">Load more</button>
+    </div>
   );
-}
+};
 
-export default LoadMoreBtn
+export default LoadMoreBtn;

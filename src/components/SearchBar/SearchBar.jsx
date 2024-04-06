@@ -1,25 +1,36 @@
-import { Form } from "react-bootstrap";
+
 import css from "./SearchBar.module.css";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 
-const SearchBar = () => {
+const FORM_INITIAL_VALUES = {
+  searchTerm: "",
+};
+
+const SearchBar = ({ onSetSearchQuery }) => {
+  const handleSubmit = (values) => {
+    onSetSearchQuery(values.searchTerm);
+  };
   return (
     <header>
-      <h1 className={css.title}>Image Search</h1>
-      <Form onSubmit={handleSearch}>
-        <Form.Control
-          type="search"
-          placeholder="Search images and photos"
-          autocomplete="off"
-          autofocus
-          className={css.searchInput}
-          ref={searchInput}
-        />
-        <button type="submit" className={css.btnSubmit}>
-          Search
-        </button>
-      </Form>
+      <Formik initialValues={FORM_INITIAL_VALUES} onSubmit={handleSubmit}>
+        <Form>
+          <h2 className={css.title}>Image Search</h2>
+          <label>
+            <Field
+              type="text"
+              name="searchTerm"
+              placeholder="Enter search query..."
+              className={css.searchInput}
+            />
+            <ErrorMessage component="p" name="searchTerm" />
+          </label>
+          <button type="submit" className={css.btnSubmit}>
+            Search
+          </button>
+        </Form>
+      </Formik>
     </header>
   );
 };
