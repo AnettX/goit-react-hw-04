@@ -1,7 +1,7 @@
 import css from "./SearchBar.module.css";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 import toast, { Toaster } from "react-hot-toast";
 
 const FORM_INITIAL_VALUES = {
@@ -10,7 +10,7 @@ const FORM_INITIAL_VALUES = {
 
 const SearchBar = ({ onSetSearchQuery }) => {
   const handleSubmit = (values) => {
-    if (!values.length) {
+    if (!values.searchTerm.trim()) {
       toast.error("Please, enter your query", {
         style: {
           border: "1px solid #713200",
@@ -37,15 +37,14 @@ const SearchBar = ({ onSetSearchQuery }) => {
                 placeholder="Enter search query..."
                 className={css.searchInput}
               />
-              <ErrorMessage component="p" name="searchTerm" />
             </label>
             <button type="submit" className={css.btnSubmit}>
               Search
             </button>
-            <Toaster position="top-left" />
           </div>
         </Form>
       </Formik>
+      <Toaster position="top-left" />
     </header>
   );
 };

@@ -7,6 +7,7 @@ import Loader from "./components/Loader/Loader";
 
 import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
 import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
+import ImageModal from "./components/ImageModal/ImageModal";
 
 function App() {
   const [query, setQuery] = useState("");
@@ -15,6 +16,8 @@ function App() {
   const [totalPages, setTotalPages] = useState(0);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalData, setModalData] = useState(null);
 
   useEffect(() => {
     if (query.length === 0) return;
@@ -54,6 +57,16 @@ function App() {
     setPage(page + 1);
   };
 
+  const openModal = (photo) => {
+    setModalData(photo);
+    setIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    setModalData(null);
+  };
+
   return (
     <div className="container">
       <SearchBar onSetSearchQuery={onSetSearchQuery} />
@@ -61,8 +74,10 @@ function App() {
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
 
-      {photos && <ImageGallery photos={photos} />}
-
+      {photos && <ImageGallery photos={photos} openModal={openModal} />}
+      {isOpen && (
+        <ImageModal isOpen={isOpen} closeModal={closeModal} photo={modalData} />
+      )}
       {totalPages > page && <LoadMoreBtn loadMorePhotos={loadMorePhotos} />}
     </div>
   );
