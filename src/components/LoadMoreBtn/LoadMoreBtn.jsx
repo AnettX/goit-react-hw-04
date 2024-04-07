@@ -1,9 +1,11 @@
-import React from "react";
+import css from "./LoadMoreBtn.module.css";
 
-const LoadMoreBtn = () => {
+const LoadMoreBtn = ({ loadMorePhotos }) => {
   return (
-    <div>
-      <button type="button">Load more</button>
+    <div className={css.containerBtn}>
+      <button className={css.btn} type="button" onClick={loadMorePhotos}>
+        Load more
+      </button>
     </div>
   );
 };

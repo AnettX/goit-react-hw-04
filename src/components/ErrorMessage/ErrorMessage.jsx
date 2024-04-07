@@ -1,5 +1,11 @@
-const ErrorMessage = ({message = "Oops, something went wrong, please reload the page!😢",}) => {
-  return <p>{message}</p>;
+import css from "./ErrorMessage.module.css";
+
+const ErrorMessage = () => {
+  return (
+    <p className={css.errorMsg}>
+      Oops, something went wrong, please reload the page or try again later!
+    </p>
+  );
 };
 
 export default ErrorMessage;

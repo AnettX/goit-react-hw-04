@@ -1,7 +1,12 @@
-import React from "react";
+
+import css from "./ImageModal.module.css";
 
 const ImageModal = () => {
-  return <div></div>;
+
+
+  return (
+
+  );
 };
 
 export default ImageModal;

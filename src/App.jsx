@@ -4,13 +4,15 @@ import SearchBar from "./components/SearchBar/SearchBar";
 import { requestPhotoesByQuery } from "./services/api";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Loader from "./components/Loader/Loader";
-import { ErrorMessage } from "formik";
+
+import LoadMoreBtn from "./components/LoadMoreBtn/LoadMoreBtn";
+import ErrorMessage from "./components/ErrorMessage/ErrorMessage";
 
 function App() {
   const [query, setQuery] = useState("");
   const [photos, setPhotos] = useState(null);
-  // const [page, setPage] = useState(1);
-  // const [totalPages, setTotalPages] = useState(0);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,8 +22,16 @@ function App() {
     async function fetchPhotosByQuery() {
       try {
         setIsLoading(true);
-        const data = await requestPhotoesByQuery(query);
-        setPhotos(data.photos);
+        setIsError(false);
+        const data = await requestPhotoesByQuery(query, page);
+        setPhotos((prevPhotos) => {
+          if (Array.isArray(prevPhotos)) {
+            return [...prevPhotos, ...data.results];
+          } else {
+            return [...data.results];
+          }
+        });
+        setTotalPages(data.total_pages);
       } catch (error) {
         setIsError(true);
       } finally {
@@ -29,19 +39,31 @@ function App() {
       }
     }
     fetchPhotosByQuery();
-  }, [query]);
+  }, [query, page]);
 
-  const onSetSearchQuery = (searchTerm) => {
-    setQuery(searchTerm);
+  const onSetSearchQuery = (newQuery) => {
+    if (newQuery !== query) {
+      setQuery(newQuery);
+      setPhotos(null);
+      setPage(1);
+      setTotalPages(0);
+    }
+  };
+
+  const loadMorePhotos = () => {
+    setPage(page + 1);
   };
 
   return (
-    <div>
+    <div className="container">
       <SearchBar onSetSearchQuery={onSetSearchQuery} />
 
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
+
       {photos && <ImageGallery photos={photos} />}
+
+      {totalPages > page && <LoadMoreBtn loadMorePhotos={loadMorePhotos} />}
     </div>
   );
 }
